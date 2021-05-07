@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,6 +16,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
+
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf("android.permission.RECEIVE_SMS", "android.permission.READ_SMS"),
+            1
+        );
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -45,11 +53,8 @@ class MainActivity : AppCompatActivity() {
             sms.add("Number: $address .Message: $body")
         }
 
-        if (cur != null) {
-            cur.close()
-        }
-        return sms
+        cur?.close()
 
-        Log.e("TEST", "BLUBB");
+        Log.e("TEST", sms.toString());
     }
 }

@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.RECEIVE_SMS"></uses-permission>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"></uses-permission>
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:allowBackup="true"
@@ -13,17 +14,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SMStoMail">
 
-        <!--<receiver android:name=".BootComplete" android:enabled="true" android:exported="false">
-            <intent-filter android:priority="99999">
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>-->
-
-        <receiver android:name=".ReceiveSMS">
-            <intent-filter android:priority="99999">
-                <action android:name="android.provider.telephony.SMS_RECIEVED"></action>
+        <receiver
+            android:name=".SMSReceiver"
+            android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
         </receiver>
+        It was originally published on https://www.apriorit.com/
 
         <activity
             android:name=".MainActivity"
