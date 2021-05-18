@@ -15,7 +15,7 @@ class SMSReceiver : BroadcastReceiver() {
         if (intent.action != (Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
             return
         }
-//        val contentResolver = context.contentResolver
+        // val contentResolver = context.contentResolver
         val smsMessages = Telephony.Sms.Intents.getMessagesFromIntent(intent)
         for (message in smsMessages) {
             Toast.makeText(
