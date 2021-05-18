@@ -15,6 +15,9 @@ import kotlinx.android.synthetic.main.activity_main.password as password_input
 import kotlinx.android.synthetic.main.activity_main.port as port_input
 import kotlinx.android.synthetic.main.activity_main.receiver as receiver_input
 
+import kotlinx.android.synthetic.main.activity_main.statusText as statusText
+import kotlinx.android.synthetic.main.activity_main.imageView as imageView
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,5 +72,15 @@ class MainActivity : AppCompatActivity() {
             "saved!",
             Toast.LENGTH_SHORT
         ).show()
+
+        SMTPConfig.read(this)
+        if(!SMTPConfig.smtpConfigComplete()){
+            statusText.text = "complete config"
+            imageView.setImageResource(R.drawable.redlight)
+        }
+        else{
+            statusText.text = "listening"
+            imageView.setImageResource(R.drawable.greenlight)
+        }
     }
 }
