@@ -3,45 +3,55 @@ package ecke.smstomail.app
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import ecke.smstomail.model.SMTPConfig
 
 import kotlinx.android.synthetic.main.activity_main.host as host_input
 import kotlinx.android.synthetic.main.activity_main.username as username_input
 import kotlinx.android.synthetic.main.activity_main.password as password_input
 import kotlinx.android.synthetic.main.activity_main.port as port_input
+import kotlinx.android.synthetic.main.activity_main.receiver as receiver_input
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var host: String
-    private lateinit var username: String
-    private lateinit var password: String
-    private lateinit var port: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        val sharedPref = getSharedPreferences("smtpconfig", Context.MODE_PRIVATE) ?: return
-        this.host = sharedPref.getString("host", null).toString();
-        this.username = sharedPref.getString("username", null).toString();
-        this.password = sharedPref.getString("password", null).toString();
-        this.port = sharedPref.getString("port", null).toString();
-
-        host_input.setText(this.host);
-        username_input.setText(this.username);
-        password_input.setText(this.password);
-        port_input.setText(this.port);
+        // if configs are set -> fill input fields
+        SMTPConfig.read(this)
+        SMTPConfig.host?.let {
+            host_input.setText(SMTPConfig.host)
+        }
+        SMTPConfig.username?.let{
+            username_input.setText(SMTPConfig.username)
+        }
+        SMTPConfig.password?.let{
+            password_input.setText(SMTPConfig.password)
+        }
+        SMTPConfig.port?.let{
+            port_input.setText(SMTPConfig.port)
+        }
+        SMTPConfig.receiver?.let{
+            receiver_input.setText(SMTPConfig.receiver)
+        }
 
         ActivityCompat.requestPermissions(
             this,
-            arrayOf("android.permission.RECEIVE_SMS", "android.permission.READ_SMS"),
+            arrayOf(
+                "android.permission.RECEIVE_SMS",
+                "android.permission.READ_SMS",
+                "android.permission.INTERNET"
+            ),
             1
-        );
+        )
     }
 
-    fun SaveSettings(view: View) {
+    fun saveSettings(view: View) {
 
         val sharedPref = getSharedPreferences("smtpconfig", Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
@@ -49,7 +59,15 @@ class MainActivity : AppCompatActivity() {
             putString("username", username_input.text.toString())
             putString("password", password_input.text.toString())
             putString("port", port_input.text.toString())
+            putString("receiver", receiver_input.text.toString())
             apply()
         }
+
+        // show as toast
+        Toast.makeText(
+            this,
+            "saved!",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }
